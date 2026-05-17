@@ -9,6 +9,15 @@ picto:
 
 # Changelog
 
+## 2026.05.17.01-preview
+
+**Release Date:** May 17, 2026
+
+- Moved Definitions from the FedRAMP section to the Overview section as they apply to all stakeholders.
+- Added Cloud Service Providers -> Getting Started as a Cloud Service Provider -> [Finding an Advisor](providers/start/advisor)
+- Added Cloud Service Providers -> Getting Started as a Cloud Service Provider -> [Finding an Assessor](providers/start/assessor)
+- Added placeholder [FedRAMP Recognition for Independent Assessment Services rules](assessors/recognition/rules/fedramp-recognition.md)
+- Lots of work continues behind the scenes
 
 ## 2026.05.04.01-preview
 

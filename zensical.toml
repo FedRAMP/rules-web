@@ -6,18 +6,18 @@ nav = [
     { "Release Timeline" = "timeline.md" },
     { "FedRAMP Certification" = "certification.md" },
     { "Shared Responsibility Model" = "shared-responsibilities.md" },
+    { "FedRAMP Definitions" = "definitions.md" },
     { "Changelog" = "changelog.md" },
     { "Source Data" = "sources.md" },
     { "TO DO" = "todo.md" },
   ] },
   { "FedRAMP" = [
     "responsibilities/index.md",
-    { "Definitions" = "definitions.md" },
     { "FedRAMP Marketplace" = "marketplace.md" },
     { "Scope of FedRAMP" = "scope.md" },
-
     { "FedRAMP's Responsibilities" = [
       { "FedRAMP Certification" = "responsibilities/fedramp-certification.md" },
+      { "FedRAMP Recognition" = "responsibilities/fedramp-recognition.md" },
       { "FedRAMP Security Inbox" = "responsibilities/fedramp-security-inbox.md" },
       { "Incident Communications Procedures" = "responsibilities/incident-communications-procedures.md" },
       { "Marketplace Listing" = "responsibilities/marketplace-listing.md" },
@@ -207,6 +207,7 @@ nav = [
       "assessors/recognition/index.md",
       { "Applicable Rules" = [
         "assessors/recognition/rules/index.md",
+        { "FedRAMP Recognition" = "assessors/recognition/rules/fedramp-recognition.md" },
         { "Marketplace Listing" = "assessors/recognition/rules/marketplace-listing.md" },
       ] },
     ] },

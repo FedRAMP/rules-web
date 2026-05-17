@@ -103,6 +103,7 @@ export interface DeadlineDocumentSourceConfig {
   documents?: RuleDocumentSelection;
   ignoreDocuments?: string[];
   types: RuleType[];
+  affects?: string[];
 }
 
 export interface DeadlineDocumentMappingConfig {

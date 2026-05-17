@@ -214,7 +214,8 @@ Add an entry to `generated.deadlineDocuments` in `config.json`:
   "source": {
     "collection": "FRR",
     "documents": ["MKT", "FRC"],
-    "types": ["20x", "rev5"]
+    "types": ["20x", "rev5"],
+    "affects": ["Providers"]
   }
 }
 ```
@@ -222,6 +223,7 @@ Add an entry to `generated.deadlineDocuments` in `config.json`:
 Deadline documents generate one page per configured type. They read each selected FRR document's `info.short_name`, `info.name`, `info.web_name`, and `info.effective` values. The generated table links each rule family name to the matching provider rule page for that type.
 
 Use `{type}` or `{version}` in `output` to place each type page explicitly. Use `source.ignoreDocuments` to remove specific FRR keys after `source.documents` is resolved, including when `source.documents` is `"ALL"`.
+Use `source.affects` to omit selected FRR documents that do not contain any rule affecting that audience, such as excluding assessor-only recognition rules from provider deadline pages.
 
 ## Generated Rule Pages
 

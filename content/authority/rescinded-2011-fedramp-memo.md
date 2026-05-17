@@ -78,71 +78,71 @@ This memorandum details the interaction among the four key stakeholders that mak
 
 a. In accordance with Office of Management and Budget (OMB) Memorandum 10-28,  “*Clarifying Cybersecurity Responsibilities and Activities of the Executive Office of the  President and the Department of Homeland Security*,” DHS will continue to exercise primary  responsibility within the Executive branch for the operational aspects of Federal agency  cybersecurity with respect to the Federal information systems that fall within the Federal  Information Security Management Act of 2002 (FISMA) (Title III, Pub. L. No. 107-347).  Within the operational framework of FedRAMP, DHS activities will include:
 
-<ul>i. Assisting government-wide and agency-specific efforts to provide adequate, risk-based  and cost-effective cybersecurity; </ul>
+  1. Assisting government-wide and agency-specific efforts to provide adequate, risk-based  and cost-effective cybersecurity;
 
-<ul>ii. Coordinating cybersecurity operations and incident response and providing appropriate  assistance; </ul>
+  2. Coordinating cybersecurity operations and incident response and providing appropriate  assistance;
 
-<ul>iii. Developing continuous monitoring standards for ongoing cybersecurity of Federal  information systems to include real-time monitoring and continuously verified  operating configurations;[^7] and </ul>
+  3. Developing continuous monitoring standards for ongoing cybersecurity of Federal  information systems to include real-time monitoring and continuously verified  operating configurations;[^7] and
 
-<ul>iv. Developing guidance on agency implementation of the Trusted Internet Connection  (TIC) program with cloud services. </ul>
+  4. Developing guidance on agency implementation of the Trusted Internet Connection  (TIC) program with cloud services.
 
 b. DOD, DHS, and GSA have agreed to establish a JAB and serve as permanent members of the  Board. The JAB shall:
 
-<ul>i. Consist of Chief Information Officers from DOD, DHS, and GSA, supported by  designated technical representatives from their respective member organizations; </ul>
+  1. Consist of Chief Information Officers from DOD, DHS, and GSA, supported by  designated technical representatives from their respective member organizations;
 
-<ul>ii. Define and regularly update the FedRAMP security authorization requirements[^8] in  accordance with the Federal Information Security Management Act of 2002 (FISMA)  and DHS guidance; </ul>
+  2. Define and regularly update the FedRAMP security authorization requirements[^8] in  accordance with the Federal Information Security Management Act of 2002 (FISMA)  and DHS guidance;
 
-<ul>iii. Approve accreditation criteria for third-party assessment organizations (3PAOs) to  provide independent assessments of CSPs’ implementation of the FedRAMP security  authorization requirements[^9]; </ul>
+  3. Approve accreditation criteria for third-party assessment organizations (3PAOs) to  provide independent assessments of CSPs’ implementation of the FedRAMP security  authorization requirements[^9];
 
-<ul>iv. Establish and publish priority queue requirements for authorization package reviews; </ul>
+  4. Establish and publish priority queue requirements for authorization package reviews;
 
-<ul>v. Review authorization packages for cloud services based on the priority queue;  </ul>
+  5. Review authorization packages for cloud services based on the priority queue;
 
-<ul>vi. Grant provisional authorizations for cloud services that can be used as an initial  approval that Executive departments and agencies leverage in granting security  authorizations and an accompanying authority to operate (ATO) for use;  </ul>
+  6. Grant provisional authorizations for cloud services that can be used as an initial  approval that Executive departments and agencies leverage in granting security  authorizations and an accompanying authority to operate (ATO) for use;
 
-<ul>vii. Ensure that provisional authorizations are reviewed and updated regularly and notify  Executive departments and agencies of any changes to provisional authorizations  including removal of such authorizations; and </ul>
+  7. Ensure that provisional authorizations are reviewed and updated regularly and notify  Executive departments and agencies of any changes to provisional authorizations  including removal of such authorizations; and
 
-<ul>viii. Establish methods for input to the FedRAMP security authorization requirements from  all Executive departments and agencies. </ul>
+  8. Establish methods for input to the FedRAMP security authorization requirements from  all Executive departments and agencies.
 
 c. GSA has agreed to establish a FedRAMP PMO which will:
 
-<ul>i. Create a process for Executive departments and agencies and CSPs to adhere to the  FedRAMP security authorization requirements created by the JAB to include, but not  limited to: </ul>
+  1. Create a process for Executive departments and agencies and CSPs to adhere to the  FedRAMP security authorization requirements created by the JAB to include, but not  limited to:
 
-<ul><ul>a. A methodology for harmonizing agency-specific security and privacy controls  with the FedRAMP security authorization requirements; </ul></ul>
+    a. A methodology for harmonizing agency-specific security and privacy controls  with the FedRAMP security authorization requirements;
 
-<ul><ul>b. A mechanism for Executive departments and agencies and CSPs to request  security authorization initiation through the FedRAMP PMO and JAB; </ul></ul>
+    b. A mechanism for Executive departments and agencies and CSPs to request  security authorization initiation through the FedRAMP PMO and JAB;
 
-<ul><ul>c. Guidance for Executive departments and agencies to satisfy FedRAMP security  authorization requirements when a proposed cloud service is not prioritized for  review by the FedRAMP PMO and JAB;  </ul></ul>
+    c. Guidance for Executive departments and agencies to satisfy FedRAMP security  authorization requirements when a proposed cloud service is not prioritized for  review by the FedRAMP PMO and JAB;
 
-<ul><ul>d. A framework for Executive departments and agencies to leverage security  authorization packages processed by FedRAMP; and </ul></ul>
+    d. A framework for Executive departments and agencies to leverage security  authorization packages processed by FedRAMP; and
 
-<ul><ul>e. In coordination with DHS, a framework for continuous monitoring, incident  response and remediation, and FISMA reporting. </ul></ul>
+    e. In coordination with DHS, a framework for continuous monitoring, incident  response and remediation, and FISMA reporting.
 
-<ul>ii. Prioritize requests for authorization and authorization package review by the JAB in  accordance with the JAB-approved priority queue requirements and publish and update  on a continuous basis the FedRAMP priority queue; </ul>
+  2. Prioritize requests for authorization and authorization package review by the JAB in  accordance with the JAB-approved priority queue requirements and publish and update  on a continuous basis the FedRAMP priority queue;
 
-<ul>iii. Establish a centralized, secure repository detailing requests for authorization, agency provided authorization packages, CSP-provided authorization packages, and JAB  provisional authorization packages of cloud services that Executive departments and  agencies can leverage to grant security authorizations; </ul>
+  3. Establish a centralized, secure repository detailing requests for authorization, agency provided authorization packages, CSP-provided authorization packages, and JAB  provisional authorization packages of cloud services that Executive departments and  agencies can leverage to grant security authorizations;
 
-<ul>iv. Coordinate and collaborate with the NIST to develop and implement a formal  conformity assessment program to accredit 3PAOs to provide independent assessments  of how CSPs implement the FedRAMP requirements; </ul>
+  4. Coordinate and collaborate with the NIST to develop and implement a formal  conformity assessment program to accredit 3PAOs to provide independent assessments  of how CSPs implement the FedRAMP requirements;
 
-<ul>v. Develop and make available to Executive departments and agencies templates that can  satisfy FedRAMP security authorization requirements through standard contract  language and service level agreements (SLAs) for use in the acquisition of cloud  services; and </ul>
+  5. Develop and make available to Executive departments and agencies templates that can  satisfy FedRAMP security authorization requirements through standard contract  language and service level agreements (SLAs) for use in the acquisition of cloud  services; and
 
-<ul>vi. Develop and make available to Executive departments and agencies template  Memoranda of Understanding (MOU) and/or Memoranda of Agreement (MOA) that will govern the exchange of information between Executive departments, agencies and  the FedRAMP PMO. </ul>
+  6. Develop and make available to Executive departments and agencies template  Memoranda of Understanding (MOU) and/or Memoranda of Agreement (MOA) that will govern the exchange of information between Executive departments, agencies and  the FedRAMP PMO.
 
 d. Each Executive department or agency shall:
 
-<ul>i. Use FedRAMP when conducting risk assessments, security authorizations, and granting ATOs for all Executive department or agency use of cloud services; </ul>
+  1. Use FedRAMP when conducting risk assessments, security authorizations, and granting ATOs for all Executive department or agency use of cloud services;
 
-<ul>ii. Use the FedRAMP PMO process and the JAB-approved FedRAMP security  authorization requirements as a baseline when initiating, reviewing, granting and  revoking security authorizations for cloud services[^10] </ul>
+  2. Use the FedRAMP PMO process and the JAB-approved FedRAMP security  authorization requirements as a baseline when initiating, reviewing, granting and  revoking security authorizations for cloud services[^10]
 
-<ul>iii. Ensure applicable contracts appropriately require CSPs to comply with FedRAMP  security authorization requirements; </ul>
+  3. Ensure applicable contracts appropriately require CSPs to comply with FedRAMP  security authorization requirements;
 
-<ul>iv. Establish and implement an incident response and mitigation capability for security and  privacy incidents for cloud services in accordance with DHS guidance; </ul>
+  4. Establish and implement an incident response and mitigation capability for security and  privacy incidents for cloud services in accordance with DHS guidance;
 
-<ul>v. Ensure that acquisition requirements address maintaining FedRAMP security  authorization requirements and that relevant contract provisions related to contractor  reviews and inspections are included for CSPs; </ul>
+  5. Ensure that acquisition requirements address maintaining FedRAMP security  authorization requirements and that relevant contract provisions related to contractor  reviews and inspections are included for CSPs;
 
-<ul>vi. Consistent with DHS guidance, require that CSPs route their traffic such that the  service meets the requirements of the Trusted Internet Connection (TIC) program; and </ul>
+  6. Consistent with DHS guidance, require that CSPs route their traffic such that the  service meets the requirements of the Trusted Internet Connection (TIC) program; and
 
-<ul>vii. Provide to the Federal Chief Information Officer (CIO) annually on April 30, a  certification in writing from the Executive department or agency CIO and Chief  Financial Officer, a listing of all cloud services that an agency determines cannot meet  the FedRAMP security authorization requirements with appropriate rationale and  proposed resolutions. </ul>
+  7. Provide to the Federal Chief Information Officer (CIO) annually on April 30, a  certification in writing from the Executive department or agency CIO and Chief  Financial Officer, a listing of all cloud services that an agency determines cannot meet  the FedRAMP security authorization requirements with appropriate rationale and  proposed resolutions.
 
 e. The CIO Council shall publish and disseminate information from the FedRAMP PMO and  JAB to Executive departments and agencies.
 
@@ -195,8 +195,6 @@ o. ISO/IEC 17011: Conformity Assessment – General requirements for accreditati
 p. ISO/IEC 17020: General criteria for the operation of various types of bodies performing  inspection.
 
 q. The Office of Management and Budget, *The Federal Cloud Computing Strategy*. Any questions regarding this memorandum should be directed to FedRAMP@omb.eop.gov.
-
-
 
 
 [^1]: References to Executive departments and agencies include all subordinate organizations within those departments and agencies.

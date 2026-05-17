@@ -348,6 +348,69 @@ function markdownPathsInZensicalConfig(source: string): string[] {
   );
 }
 
+interface ZensicalNavLocation {
+  sectionHref?: string;
+  sectionLabel: string;
+}
+
+function navLocationsInZensicalConfig(
+  source: string,
+): Map<string, ZensicalNavLocation> {
+  const locationByPath = new Map<string, ZensicalNavLocation>();
+  const sectionHrefByLabel = new Map<string, string>();
+  let currentSectionLabel: string | null = null;
+  const topLevelSectionPattern =
+    /^  \{\s*(?:"([^"]+)"|([A-Za-z][A-Za-z0-9 _'-]*))\s*=/;
+
+  for (const line of source.split(/\r?\n/)) {
+    const sectionMatch = line.match(topLevelSectionPattern);
+    if (sectionMatch) {
+      currentSectionLabel = (sectionMatch[1] ?? sectionMatch[2] ?? "").trim();
+    }
+
+    if (!currentSectionLabel) {
+      continue;
+    }
+
+    for (const pathMatch of line.matchAll(/"([^"]+\.md)"/g)) {
+      const relativePath = pathMatch[1];
+      if (!relativePath) {
+        continue;
+      }
+
+      if (!sectionHrefByLabel.has(currentSectionLabel)) {
+        sectionHrefByLabel.set(currentSectionLabel, relativePath);
+      }
+
+      if (!locationByPath.has(relativePath)) {
+        locationByPath.set(relativePath, {
+          sectionHref: sectionHrefByLabel.get(currentSectionLabel),
+          sectionLabel: currentSectionLabel,
+        });
+      }
+    }
+  }
+
+  return locationByPath;
+}
+
+function expectedTodoLocationFromZensicalConfig(
+  zensicalConfig: string,
+  pageTitle: string,
+  relativePath: string,
+): string {
+  const location = navLocationsInZensicalConfig(zensicalConfig).get(relativePath);
+  if (!location) {
+    throw new Error(`${relativePath} must be linked in zensical.toml`);
+  }
+
+  const sectionLink = location.sectionHref
+    ? `[${location.sectionLabel}](${location.sectionHref})`
+    : location.sectionLabel;
+
+  return `${sectionLink} :lucide-circle-arrow-out-down-right:<br> [${pageTitle}](${relativePath})`;
+}
+
 async function findBoldMarkdownHeadingWarnings(root: string): Promise<string[]> {
   const markdownPaths = (await listRelativeFiles(root))
     .filter((relativePath) => relativePath.endsWith(".md"))
@@ -858,6 +921,7 @@ describe("build-markdown", () => {
       "| FRC | [FedRAMP Certification](../../20x/rules/fedramp-certification.md) | 2026-07-04 | 2027-05-04 | 2027-05-04 |",
     );
     expect(deadlines20xContents).not.toContain("| AGU |");
+    expect(deadlines20xContents).not.toContain("| REC |");
     expect(deadlines20xContents).not.toContain("Rev5 Deadlines");
     expect(
       deadlines20xContents.indexOf(
@@ -882,7 +946,39 @@ describe("build-markdown", () => {
     expect(deadlinesRev5Contents).toContain(
       "| MAS | [Minimum Assessment Scope](../../rev5/rules/minimum-assessment-scope.md) | 2027-01-01 | 2027-01-01 | Within 2 months of the next annual assessment after 2027-01-01 |",
     );
+    expect(deadlinesRev5Contents).not.toContain("| REC |");
     expect(deadlinesRev5Contents).not.toContain("20x Deadlines");
+
+    const assessorDeadlines20xContents = await readFile(
+      path.join(OUTPUT_DIR, "assessors", "updating", "deadlines", "20x.md"),
+      "utf8",
+    );
+    expect(assessorDeadlines20xContents).toContain(
+      "| FRC | [FedRAMP Certification](../../20x/rules/fedramp-certification.md) |",
+    );
+    expect(assessorDeadlines20xContents).toContain(
+      "| MKT | [Marketplace Listing](../../recognition/rules/marketplace-listing.md) |",
+    );
+    expect(assessorDeadlines20xContents).toContain(
+      "| REC | [FedRAMP Recognition of Independent Assessment Services](../../recognition/rules/fedramp-recognition.md) |",
+    );
+    expect(assessorDeadlines20xContents).not.toContain(
+      "../../../providers/20x/rules/",
+    );
+
+    const assessorDeadlinesRev5Contents = await readFile(
+      path.join(OUTPUT_DIR, "assessors", "updating", "deadlines", "rev5.md"),
+      "utf8",
+    );
+    expect(assessorDeadlinesRev5Contents).toContain(
+      "| FRC | [FedRAMP Certification](../../rev5/rules/fedramp-certification.md) |",
+    );
+    expect(assessorDeadlinesRev5Contents).toContain(
+      "| REC | [FedRAMP Recognition of Independent Assessment Services](../../recognition/rules/fedramp-recognition.md) |",
+    );
+    expect(assessorDeadlinesRev5Contents).not.toContain(
+      "../../../providers/rev5/rules/",
+    );
 
     const contentDefinitionsPath = path.join(
       resolveToolPath(config.paths.content),
@@ -1103,6 +1199,48 @@ describe("build-markdown", () => {
     expect(deadlineArtifact).toBeDefined();
     expect(shortNames).toContain("FRC");
     expect(shortNames).not.toContain("MKT");
+  });
+
+  test("ignores deadline documents with no rules affecting the configured audience", async () => {
+    const config = await loadToolConfig();
+    const rules = await loadRules(config);
+    const artifacts = collectArtifacts(rules, {
+      ...config,
+      generated: {
+        ...config.generated,
+        definitionDocuments: [],
+        ksiDocuments: [],
+        deadlineDocuments: [
+          {
+            id: "provider-deadlines-with-rec",
+            title: "Important Deadlines",
+            output: "providers/updating/deadlines/{type}.md",
+            status: "stable",
+            template: "templates/deadlines.hbs",
+            source: {
+              collection: "FRR",
+              documents: ["REC", "FRC"],
+              types: ["20x"],
+              affects: ["Providers"],
+            },
+          },
+        ],
+        ruleDocuments: [],
+      },
+    });
+
+    const deadlineArtifact = artifacts.find(
+      (artifact) =>
+        artifact.documentType === "DEADLINES" &&
+        artifact.relativePath === "providers/updating/deadlines/20x.md",
+    );
+    const shortNames =
+      deadlineArtifact?.context.deadlineTables.flatMap((table) =>
+        table.rows.map((row) => row.shortName),
+      ) ?? [];
+
+    expect(deadlineArtifact).toBeDefined();
+    expect(shortNames).toEqual(["FRC"]);
   });
 
   test("adds page info admonitions below content pictograph spans", async () => {
@@ -1602,7 +1740,11 @@ describe("build pipeline", () => {
     expect(todoMarkdown).toContain("[FedRAMP Definitions](definitions.md)");
     expect(todoMarkdown).toContain("[FedRAMP](responsibilities/index.md)");
     expect(todoMarkdown).toContain(
-      "[FedRAMP](responsibilities/index.md) :lucide-circle-arrow-out-down-right:<br> [FedRAMP Definitions](definitions.md)",
+      expectedTodoLocationFromZensicalConfig(
+        zensicalConfig,
+        "FedRAMP Definitions",
+        "definitions.md",
+      ),
     );
     expect(todoMarkdown).not.toContain("authority/");
     expect(todoMarkdown).toContain(

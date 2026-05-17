@@ -73,8 +73,9 @@
         "source": {
           "collection": "FRR",
           "documents": "ALL",
-          "ignoreDocuments": ["AGU", "SDR", "IAP", "IAR"],
-          "types": ["20x", "rev5"]
+          "ignoreDocuments": ["AGU", "SDR", "IAP", "IAR", "REC"],
+          "types": ["20x", "rev5"],
+          "affects": ["Providers"]
         }
       },
       {
@@ -87,7 +88,8 @@
           "collection": "FRR",
           "documents": "ALL",
           "ignoreDocuments": ["AGU", "SDR", "IAP", "IAR"],
-          "types": ["20x", "rev5"]
+          "types": ["20x", "rev5"],
+          "affects": ["Assessors"]
         }
       }
     ],
@@ -176,7 +178,7 @@
         "source": {
           "collection": "FRR",
           "documents": "ALL",
-          "ignoreDocuments": ["MKT"],
+          "ignoreDocuments": ["MKT", "REC"],
           "types": ["20x"],
           "affects": ["Assessors"],
           "includeBoth": true,
@@ -195,7 +197,7 @@
         "source": {
           "collection": "FRR",
           "documents": "ALL",
-          "ignoreDocuments": ["MKT"],
+          "ignoreDocuments": ["MKT", "REC"],
           "types": ["rev5"],
           "affects": ["Assessors"],
           "includeBoth": true,
@@ -213,7 +215,7 @@
         "includeEffectiveDates": false,
         "source": {
           "collection": "FRR",
-          "documents": ["MKT"],
+          "documents": ["MKT", "REC"],
           "types": ["20x", "rev5"],
           "affects": ["Assessors"],
           "includeBoth": true,

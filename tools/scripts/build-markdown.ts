@@ -949,11 +949,24 @@ function matchesAny(value: string, allowedValues: string[]): boolean {
   );
 }
 
+function affectsFiltersOverlap(left: string[], right: string[]): boolean {
+  return left.some((value) => matchesAny(value, right));
+}
+
 function requirementMatchesMapping(
   requirement: RequirementEntrySource,
   mapping: RuleDocumentMappingConfig,
 ): boolean {
-  const affects = mapping.source.affects ?? [];
+  return requirementMatchesAffectedParties(
+    requirement,
+    mapping.source.affects ?? [],
+  );
+}
+
+function requirementMatchesAffectedParties(
+  requirement: RequirementEntrySource,
+  affects: string[],
+): boolean {
   if (!affects.length) {
     return true;
   }
@@ -1020,6 +1033,38 @@ function buildConfiguredSectionViewModels(
   }
 
   return Array.from(sections.values());
+}
+
+function documentHasRequirementAffecting(
+  document: RequirementDocumentSource,
+  versions: Version[],
+  affects: string[],
+  allowedSections?: string[],
+): boolean {
+  if (!affects.length) {
+    return true;
+  }
+
+  for (const bucketName of configuredTypeBuckets(versions, true, "first")) {
+    const bucket = document.data[bucketName];
+    if (!bucket) {
+      continue;
+    }
+
+    for (const [labelKey, sectionRequirements] of Object.entries(bucket)) {
+      if (allowedSections && !allowedSections.includes(labelKey)) {
+        continue;
+      }
+
+      for (const requirement of Object.values(sectionRequirements)) {
+        if (requirementMatchesAffectedParties(requirement, affects)) {
+          return true;
+        }
+      }
+    }
+  }
+
+  return false;
 }
 
 function buildDocumentGroupedSectionViewModel(
@@ -1235,21 +1280,98 @@ function sourceDeadlineDocuments(
   rules: RulesDocument,
   mapping: DeadlineDocumentMappingConfig,
 ): SourceDocument[] {
-  return deadlineSourceDocumentKeys(rules, mapping).map((documentKey) => {
-    const document = rules.FRR[documentKey];
-    if (!document) {
-      throw new Error(`Unknown FRR document: ${documentKey}`);
-    }
+  return deadlineSourceDocumentKeys(rules, mapping)
+    .map((documentKey) => {
+      const document = rules.FRR[documentKey];
+      if (!document) {
+        throw new Error(`Unknown FRR document: ${documentKey}`);
+      }
 
-    return {
-      key: documentKey,
-      document,
-    };
-  });
+      return {
+        key: documentKey,
+        document,
+      };
+    })
+    .filter(({ document }) =>
+      documentHasRequirementAffecting(
+        document,
+        mapping.source.types,
+        mapping.source.affects ?? [],
+      ),
+    );
 }
 
 function markdownTableCell(value: string): string {
   return value.replace(/\s+/g, " ").replace(/\|/g, "\\|").trim();
+}
+
+function ruleMappingMatchesDeadlineAudience(
+  ruleMapping: RuleDocumentMappingConfig,
+  deadlineMapping: DeadlineDocumentMappingConfig,
+): boolean {
+  const deadlineAffects = deadlineMapping.source.affects ?? [];
+  if (!deadlineAffects.length) {
+    return true;
+  }
+
+  const ruleAffects = ruleMapping.source.affects ?? [];
+  if (!ruleAffects.length) {
+    return false;
+  }
+
+  return affectsFiltersOverlap(deadlineAffects, ruleAffects);
+}
+
+function ruleMappingIncludesSourceDocument(
+  rules: RulesDocument,
+  ruleMapping: RuleDocumentMappingConfig,
+  documentKey: string,
+): boolean {
+  return sourceDocumentKeys(rules, ruleMapping).includes(documentKey);
+}
+
+function matchingDeadlineRuleDocumentPath(
+  sourceDocument: SourceDocument,
+  version: Version,
+  rules: RulesDocument,
+  config: ToolConfig,
+  deadlineMapping: DeadlineDocumentMappingConfig,
+): string {
+  const matchingRuleMapping = config.generated.ruleDocuments.find((ruleMapping) => {
+    if (ruleMapping.source.collection !== "FRR") {
+      return false;
+    }
+
+    if (!ruleMapping.source.types.includes(version)) {
+      return false;
+    }
+
+    if (!ruleMappingMatchesDeadlineAudience(ruleMapping, deadlineMapping)) {
+      return false;
+    }
+
+    if (!ruleMappingIncludesSourceDocument(rules, ruleMapping, sourceDocument.key)) {
+      return false;
+    }
+
+    return documentHasRequirementAffecting(
+      sourceDocument.document,
+      [version],
+      ruleMapping.source.affects ?? [],
+      ruleMapping.source.sections,
+    );
+  });
+
+  if (!matchingRuleMapping) {
+    return `providers/${version}/rules/${sourceDocument.document.info.web_name}.md`;
+  }
+
+  return normalizeGeneratedPath(
+    renderRuleDocumentOutput(
+      matchingRuleMapping,
+      sourceDocument.document.info.web_name,
+    ),
+  );
 }
 
 function deadlineDate(
@@ -1279,19 +1401,30 @@ function deadlineGraceEnds(entry: EffectiveEntrySource): string {
 }
 
 function buildDeadlineRowViewModel(
-  document: RequirementDocumentSource,
+  sourceDocument: SourceDocument,
   version: Version,
   pageRelativePath: string,
+  rules: RulesDocument,
+  config: ToolConfig,
+  mapping: DeadlineDocumentMappingConfig,
 ): DeadlineRowViewModel | null {
+  const { document } = sourceDocument;
   const entry = effectiveEntryForVersion(document.info.effective, version);
   if (!entry) {
     return null;
   }
 
+  const rulePageRelativePath = matchingDeadlineRuleDocumentPath(
+    sourceDocument,
+    version,
+    rules,
+    config,
+    mapping,
+  );
   const rulesRelativePath = toPosixPath(
     path.posix.relative(
       path.posix.dirname(pageRelativePath),
-      `providers/${version}/rules/${document.info.web_name}.md`,
+      rulePageRelativePath,
     ),
   );
 
@@ -1306,14 +1439,24 @@ function buildDeadlineRowViewModel(
 }
 
 function buildDeadlineTables(
-  documents: RequirementDocumentSource[],
+  sourceDocuments: SourceDocument[],
   version: Version,
   pageRelativePath: string,
+  rules: RulesDocument,
+  config: ToolConfig,
+  mapping: DeadlineDocumentMappingConfig,
 ): DeadlineTableViewModel[] {
-  const rows = documents
-    .map((document, index) => ({
+  const rows = sourceDocuments
+    .map((sourceDocument, index) => ({
       index,
-      row: buildDeadlineRowViewModel(document, version, pageRelativePath),
+      row: buildDeadlineRowViewModel(
+        sourceDocument,
+        version,
+        pageRelativePath,
+        rules,
+        config,
+        mapping,
+      ),
     }))
     .filter((entry): entry is { index: number; row: DeadlineRowViewModel } =>
       entry.row !== null
@@ -2129,9 +2272,12 @@ function collectDeadlineDocumentArtifactsForMapping(
     throw new Error(`Unsupported source collection: ${mapping.source.collection}`);
   }
 
-  const documents = sourceDeadlineDocuments(rules, mapping).map(
-    (entry) => entry.document,
-  );
+  const sourceDocumentEntries = sourceDeadlineDocuments(rules, mapping);
+  const documents = sourceDocumentEntries.map((entry) => entry.document);
+  if (!documents.length) {
+    return [];
+  }
+
   const status = combinedDeadlineDocumentStatus(
     config,
     documents,
@@ -2144,9 +2290,12 @@ function collectDeadlineDocumentArtifactsForMapping(
         renderDeadlineDocumentOutput(mapping, version),
       );
       const deadlineTables = buildDeadlineTables(
-        documents,
+        sourceDocumentEntries,
         version,
         relativePath,
+        rules,
+        config,
+        mapping,
       );
       if (!deadlineTables.length) {
         return null;
