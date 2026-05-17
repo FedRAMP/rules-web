@@ -2,7 +2,7 @@
 
 This repository builds the static site for the FedRAMP Consolidated Rules for 2026 preview.
 
-Preview site: <https://fedramp.gov/preview/2026>
+Preview site: <https://preview.fedramp.gov/2026>
 
 The content and implementation are under active development. Treat this repository as provisional preview material, not final FedRAMP guidance.
 
